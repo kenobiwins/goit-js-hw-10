@@ -12,7 +12,6 @@ const refs = {
 };
 
 refs.search.addEventListener('input', debounce(onSearch, DEBOUNCE_DELAY));
-refs.countryList.addEventListener('click', showInfo);
 
 function onSearch(e) {
   const { target } = e;
@@ -22,14 +21,16 @@ function onSearch(e) {
   }
   fetchCountries(target.value.trim())
     .then(data => {
-      if (data.length >= 10) {
+      if (data.length > 10) {
         return Notiflix.Notify.info(
           `Too many matches found. Please enter a more specific name.`
         );
       } else if (data.length >= 2 && data.length <= 10) {
         insertMarkup(renderList(data));
+        refs.countryList.addEventListener('click', showInfo);
       } else if (data.length === 1) {
         insertMarkup(renderInfo(data));
+        refs.countryList.removeEventListener('click', showInfo);
       }
     })
     .catch(error => {
@@ -40,10 +41,11 @@ function onSearch(e) {
 
 function showInfo(e) {
   const { target } = e;
-  console.log(target.textContent);
   fetchCountries(target.textContent.trim()).then(data =>
     insertMarkup(renderInfo(data))
   );
+  refs.search.value = target.textContent.trim();
+  refs.countryList.removeEventListener('click', showInfo);
 }
 
 function renderList(array) {
@@ -60,12 +62,12 @@ function renderInfo(array) {
     (acc, { name, flags, capital, population, languages }) => {
       acc += `<li class="item-info">
       <h2>
-      <img width="40px" src="${flags.svg}">
+      <img width="60px" src="${flags.svg}">
       ${name.official}
       </h2>
-      <p><span>Capital:</span>${capital}</p>
-      <p><span>Population:</span>${population}</p>
-      <p><span>Languages:</span>${Object.values(languages).join(',')}</p>
+      <p><span>Capital:</span> ${capital}</p>
+      <p><span>Population:</span> ${population}</p>
+      <p><span>Languages:</span> ${Object.values(languages).join(', ')}</p>
       </li>`;
       return acc;
     },
@@ -74,5 +76,4 @@ function renderInfo(array) {
 }
 function insertMarkup(string) {
   return (refs.countryList.innerHTML = string);
-  // return refs.countryList.insertAdjacentHTML('beforeend', string);
 }

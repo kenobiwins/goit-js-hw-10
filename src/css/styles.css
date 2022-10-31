@@ -18,3 +18,52 @@ body {
   max-width: 320px;
   margin-bottom: 16px;
 }
+img{
+  display: block;
+}
+ul{
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  list-style: none;
+  padding: 0 ;
+  margin: 0;
+
+}
+span{
+  font-weight: 700;
+}
+h2{
+  margin: 0;
+}
+.item{
+position: relative;
+padding: 6px;
+font-weight: 500;
+cursor: pointer;
+}
+
+.item::after{
+content: '';
+position: absolute;
+width: 100%;
+left: 0;
+bottom: 0;
+border-bottom: 2px solid #597487;
+}
+
+.item-info{
+  position: relative;
+  border: 1px solid gray;
+  border-radius: 6px;
+  padding: 12px;
+  box-shadow: 2px 2px 4px 2px #597487;
+}
+
+/* .btn-close{
+position: absolute;
+border: none;
+background-color: transparent;
+cursor: pointer;
+right: 12px;
+} */
